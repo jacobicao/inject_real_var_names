@@ -44,7 +44,6 @@ def foo(a,b):
 if __name__ == '__main__':
     jacob = 233
     
-    #  函数内获取实参名
     foo(jacob,"hello")
     foo(a=jacob,b="hello")
     
