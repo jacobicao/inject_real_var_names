@@ -13,7 +13,7 @@ if __name__ == '__main__':
     jacob = 233
     
     foo(jacob,"hello")
-    foo(a=jacob,b="hello")
+    foo(b="hello",a=jacob)
 ```
 The output of the above script is as follows:
 >The formal parameter "a"'s real parameter is "jacob", and it's value is "233"!
