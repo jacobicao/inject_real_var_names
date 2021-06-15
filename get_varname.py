@@ -5,7 +5,7 @@ def inject_real_var_names(function):
     @wraps(function)
     def function_with_real_vars(*args,**kwargs):
         func_name = function.__name__
-        formal_vars = function.__code__.co_varnames
+        formal_vars = function.__code__.co_varnames[:function.__code__.co_argcount]
         real_vars = ['',]*len(formal_vars)
         realname = {}
         m = None
@@ -13,10 +13,12 @@ def inject_real_var_names(function):
         for line in inspect.getframeinfo(inspect.currentframe().f_back)[3]:
             m = re.search(pattern.format(func_name), line) or m
         if m:
-            real_vars = [v.strip().split('=')[-1] for v in m.group(1).split(',')]
+            real_vars = [v.strip() for v in m.group(1).split(',') if v.find('=')==-1]
+            real_vars2 = dict([v.strip().split('=') for v in m.group(1).split(',') if v.find('=')!=-1])
+
         
         realname = dict(zip(formal_vars ,real_vars))
-        function_with_real_vars.__setattr__("_realname",realname)
+        function_with_real_vars.__setattr__("_realname",{**realname,**real_vars2})
         
         result = function(*args,**kwargs)
         return result
@@ -34,16 +36,16 @@ def get_varname(p):
 
 
 @inject_real_var_names
-def foo(a,b):
-    formal_var = get_varname(a)
-    real_var = foo._realname[formal_var]
+def family(father,mother):
+    formal_var = get_varname(father)
+    real_var = family._realname[formal_var]
     print('The formal parameter "{}"\'s real parameter is "{}", and it\'s value is "{}"!'
-          .format(formal_var,real_var,a))
+          .format(formal_var,real_var,father))
 
 
 if __name__ == '__main__':
-    jacob = 233
+    man = "Ken"
     
-    foo(jacob,"hello")
-    foo(a=jacob,b="hello")
+    family(man,"Kitty")
+    family(mother="Kitty",father=man)
     
