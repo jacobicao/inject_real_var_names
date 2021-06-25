@@ -5,7 +5,9 @@
 def foo(a,b):
     formal_var = get_varname(a)
     real_var = foo._realname[formal_var]
-    print('The formal parameter "{}"\'s real parameter is "{}", and it\'s value is "{}"!'
+    print('''The formal parameter "{}"\'s 
+           real parameter is "{}", 
+           and it\'s value is "{}"!'''
           .format(formal_var,real_var,a))
 
 
